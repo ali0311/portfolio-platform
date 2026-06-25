@@ -1,0 +1,56 @@
+# =============================================================================
+# Root .gitignore for portfolio-platform monorepo
+# Covers both portfolio-platform-web (frontend) and portfolio-platform-api
+# =============================================================================
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Environment files (NEVER commit real secrets)
+.env
+.env.local
+.env.*.local
+.env.development
+# Note: portfolio-platform-web/.env.production IS committed — it only contains
+# the public API URL (VITE_API_URL), no secrets.
+# Note: .env.example and .env.production.example ARE committed (templates).
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Prisma — keep schema + migrations + seed, ignore generated client cache
+**/.prisma/
+
+# Local infra (TLS certs, etc — never commit)
+infra/letsencrypt/
+infra/certbot/
+
+# Misc
+*.local
+.cache/
+coverage/

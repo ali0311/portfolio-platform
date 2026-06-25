@@ -1,0 +1,225 @@
+.experience {
+  position: relative;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--space-12);
+}
+
+.timeline {
+  position: relative;
+  padding-left: var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--accent-primary) 10%,
+    var(--accent-secondary) 50%,
+    var(--accent-primary) 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px var(--accent-glow);
+  border-radius: var(--radius-full);
+}
+
+.item {
+  position: relative;
+}
+
+.dot {
+  position: absolute;
+  left: -38px;
+  top: 22px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-base);
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15), 0 0 20px var(--accent-glow);
+  z-index: 1;
+}
+
+.card {
+  position: relative;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-default);
+  transition: all var(--duration-base) var(--ease-out);
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-card);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-glow);
+}
+
+.card:hover::before { opacity: 1; }
+
+.orgHead {
+  position: relative;
+  z-index: 1;
+}
+
+.company {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  letter-spacing: -0.01em;
+}
+
+.orgMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.dotSep {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-disabled);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.chip {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: var(--accent-tertiary);
+  font-family: var(--font-mono);
+}
+
+.roles {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  position: relative;
+  z-index: 1;
+}
+
+.role {
+  position: relative;
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--border-default);
+}
+
+.role:hover {
+  border-left-color: var(--accent-primary);
+}
+
+.roleHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.roleTitle {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--accent-tertiary);
+}
+
+.roleDuration {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.detailsInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.bullet::before {
+  content: "";
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-tertiary);
+  margin-top: 8px;
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+.seeMore {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--accent-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-out);
+}
+
+.seeMore:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .timeline { padding-left: var(--space-8); }
+  .timeline::before { left: 12px; }
+  .dot { left: -32px; width: 12px; height: 12px; }
+  .company { font-size: var(--text-lg); }
+  .roleHead { flex-direction: column; gap: var(--space-1); }
+}

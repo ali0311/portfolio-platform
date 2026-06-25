@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: portfolio-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portfolio}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+    ports:
+      - "5433:5432"
+    volumes:
+      - portfolio_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portfolio} -d ${POSTGRES_DB:-portfolio}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - portfolio_net
+
+  api:
+    build:
+      context: ./portfolio-platform-api
+      dockerfile: Dockerfile
+    container_name: portfolio-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-portfolio}:${POSTGRES_PASSWORD:-portfolio}@postgres:5432/${POSTGRES_DB:-portfolio}?schema=public
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:8080}
+    ports:
+      - "4000:4000"
+    networks:
+      - portfolio_net
+
+  web:
+    build:
+      context: ./portfolio-platform-web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:4000}
+    container_name: portfolio-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    networks:
+      - portfolio_net
+
+volumes:
+  portfolio_pgdata:
+
+networks:
+  portfolio_net:
+    driver: bridge
