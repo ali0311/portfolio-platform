@@ -9,5 +9,5 @@ export const profile = {
     github: "https://github.com/ali0311",
     email: "mailto:hello@example.com",
   },
-  resumeUrl: "/resume/Md Ali Khan_Resume.pdf",
+  resumeUrl: "/resume/MdAliKhan_SDET.pdf",
 };
