@@ -1,7 +1,7 @@
 export const aboutParagraphs = [
   "I started my career in quality engineering — building automation frameworks, designing test strategies, and shipping reliability into systems that ran healthcare, data, and financial workflows.",
   "Over the years, my curiosity expanded. Frontend engineering pulled me into modern React patterns and design systems. DevOps pulled me into Docker, CI/CD pipelines, and cloud-native deployments. AI-assisted engineering changed how I approach building software altogether.",
-  "Today I work at the intersection of quality, frontend, and infrastructure — using AI tools to multiply my output without compromising the engineering rigor I built my career on.",
+  "Today I work at the intersection of quality, frontend, and infrastructure — using AI tools to multiply my output without compromising the engineering rigor I built my career on. I'm now exploring the space where engineering meets product — bringing this technical depth into Technical Product Ownership roles that need someone who can bridge business intent and engineering execution.",
 ];
 
 export const hobbies = [

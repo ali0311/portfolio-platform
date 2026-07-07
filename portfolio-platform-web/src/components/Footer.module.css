@@ -4,6 +4,7 @@
   border-top: 1px solid var(--border-default);
   margin-top: var(--space-12);
   overflow: hidden;
+  scroll-margin-top: var(--navbar-height);
 }
 
 .footer::before {

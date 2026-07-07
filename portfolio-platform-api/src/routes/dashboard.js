@@ -118,11 +118,28 @@ router.get("/devices", async (_req, res, next) => {
   }
 });
 
+router.get("/countries", async (_req, res, next) => {
+  try {
+    const grouped = await prisma.visitor.groupBy({
+      by: ["country"],
+      where: { country: { not: null } },
+      _count: { country: true },
+      orderBy: { _count: { country: "desc" } },
+      take: 15,
+    });
+    res.json(
+      grouped.map((g) => ({ country: g.country, count: g._count.country }))
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/recent-visitors", async (_req, res, next) => {
   try {
     const visitors = await prisma.visitor.findMany({
       orderBy: { createdAt: "desc" },
-      take: 25,
+      take: 15,
     });
     res.json(visitors);
   } catch (err) {
