@@ -11,6 +11,13 @@
   box-sizing: border-box;
 }
 
+@media (max-width: 600px) {
+  .wrap {
+    margin-left: var(--space-2);
+    margin-right: var(--space-2);
+  }
+}
+
 .wrap *,
 .wrap *::before,
 .wrap *::after {
@@ -141,7 +148,6 @@
 }
 
 @media (max-width: 640px) {
-  .wrap { padding: var(--space-7) var(--space-6); }
   .row { grid-template-columns: 1fr; }
   .submit { width: 100%; justify-content: center; }
 }

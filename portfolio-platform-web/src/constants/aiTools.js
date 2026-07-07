@@ -37,4 +37,18 @@ export const aiWork = [
       "Automated PR reviewer that reads diffs, applies team-specific guidelines, and posts inline comments — turning AI into a true team reviewer.",
     tags: ["AI", "DevOps", "GitHub", "Code Quality"],
   },
+  {
+    id: "copilot-jira-e2e-agent",
+    title: "Prompt-Driven E2E Test Authoring with Copilot",
+    description:
+      "Built a custom Copilot agent that ingests a Jira ticket on demand and generates end-to-end tests from a single prompt — the agent parses acceptance criteria, drafts the test scaffold, and delegates step generation, turning story-to-test into a one-command workflow.",
+    tags: ["AI", "Copilot", "Jira", "Test Automation"],
+  },
+  {
+    id: "claude-playwright-mcp-ui-automation",
+    title: "Claude + Playwright MCP for UI Automation",
+    description:
+      "Built a Claude-powered pipeline that pulls Jira requirements and delivers end-to-end UI automation — including locator discovery via the Playwright MCP server — producing runnable Playwright specs without hand-written selectors.",
+    tags: ["AI", "Claude", "Playwright", "MCP", "UI Automation"],
+  },
 ];

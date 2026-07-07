@@ -15,10 +15,19 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import { LogOut, Loader2 } from "lucide-react";
+import { LogOut, Loader2, Smartphone, Monitor, Tablet } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../utils/api";
+import { flagFor } from "../utils/countryFlag";
 import styles from "./Dashboard.module.css";
+
+function DeviceIcon({ type }) {
+  const size = 14;
+  if (type === "mobile") return <Smartphone size={size} />;
+  if (type === "tablet") return <Tablet size={size} />;
+  if (type === "desktop") return <Monitor size={size} />;
+  return null;
+}
 
 const EMPTY_OVERVIEW = {
   totalVisitors: 0,
@@ -38,7 +47,8 @@ function timeAgo(iso) {
   return `${day}d ago`;
 }
 
-const PIE_COLORS = ["#8b5cf6", "#6366f1", "#3b82f6", "#a78bfa", "#c4b5fd"];
+const PIE_COLORS = ["#8b5cf6", "#22d3ee", "#f97316", "#10b981", "#f43f5e", "#eab308", "#3b82f6", "#ec4899"];
+const BAR_COLORS = ["#8b5cf6", "#22d3ee", "#f97316", "#10b981", "#f43f5e", "#eab308", "#3b82f6", "#ec4899", "#a78bfa", "#14b8a6"];
 
 const tooltipStyle = {
   background: "#11111f",
@@ -49,6 +59,10 @@ const tooltipStyle = {
 };
 
 const axisStyle = { fill: "#7a7a90", fontSize: 11 };
+
+function barChartHeight(rowCount) {
+  return Math.max(240, rowCount * 28);
+}
 
 function formatNumber(n) {
   return n.toLocaleString();
@@ -67,19 +81,21 @@ export default function Dashboard() {
   const [browsers, setBrowsers] = useState([]);
   const [recentVisitors, setRecentVisitors] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         setLoading(true);
-        const [ov, tr, ts, dev, rv, msg] = await Promise.all([
+        const [ov, tr, ts, dev, rv, msg, ctry] = await Promise.all([
           api.get("/api/dashboard/overview"),
           api.get("/api/dashboard/visitor-trend"),
           api.get("/api/dashboard/top-sections"),
           api.get("/api/dashboard/devices"),
           api.get("/api/dashboard/recent-visitors"),
           api.get("/api/dashboard/contact-messages"),
+          api.get("/api/dashboard/countries"),
         ]);
         if (cancelled) return;
         setOverview(ov);
@@ -89,6 +105,7 @@ export default function Dashboard() {
         setBrowsers(dev.browsers.map((b) => ({ name: b.browser, value: b.count })));
         setRecentVisitors(rv);
         setMessages(msg);
+        setCountries(ctry.map((c) => ({ country: c.country, count: c.count })));
       } catch (err) {
         if (!cancelled) setError(err?.message || "Failed to load dashboard");
       } finally {
@@ -217,7 +234,7 @@ export default function Dashboard() {
               <span className={styles.panelTitle}>Top Viewed Sections</span>
               <span className={styles.panelSub}>All time</span>
             </div>
-            <div className={styles.chartHost}>
+            <div className={styles.chartHost} style={{ height: barChartHeight(topSections.length) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={topSections} layout="vertical">
                   <CartesianGrid stroke="rgba(255,255,255,0.05)" horizontal={false} />
@@ -229,6 +246,7 @@ export default function Dashboard() {
                     axisLine={false}
                     tickLine={false}
                     width={70}
+                    interval={0}
                   />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Bar
@@ -243,6 +261,8 @@ export default function Dashboard() {
         </div>
 
         <div className={styles.row3}>
+          <div className={styles.row3Left}>
+            <div className={styles.row3Pies}>
           <div className={styles.panel}>
             <div className={styles.panelHead}>
               <span className={styles.panelTitle}>Devices</span>
@@ -302,6 +322,42 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </div>
           </div>
+            </div>
+
+            <div className={styles.panel}>
+              <div className={styles.panelHead}>
+                <span className={styles.panelTitle}>Countries</span>
+                <span className={styles.panelSub}>Where visitors are from</span>
+              </div>
+              <div className={styles.chartHost} style={{ height: barChartHeight(countries.length) }}>
+                {countries.length === 0 ? (
+                  <div className={styles.emptyState}>No country data yet</div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={countries} layout="vertical">
+                      <CartesianGrid stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                      <XAxis type="number" tick={axisStyle} axisLine={false} tickLine={false} />
+                      <YAxis
+                        type="category"
+                        dataKey="country"
+                        tick={axisStyle}
+                        axisLine={false}
+                        tickLine={false}
+                        width={110}
+                        interval={0}
+                      />
+                      <Tooltip contentStyle={tooltipStyle} />
+                      <Bar dataKey="count" radius={[0, 6, 6, 0]}>
+                        {countries.map((_, i) => (
+                          <Cell key={i} fill={BAR_COLORS[i % BAR_COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+            </div>
+          </div>
 
           <div className={styles.panel}>
             <div className={styles.panelHead}>
@@ -312,17 +368,29 @@ export default function Dashboard() {
               {recentVisitors.length === 0 && (
                 <div className={styles.emptyState}>No visitors yet</div>
               )}
-              {recentVisitors.map((v) => (
-                <div key={v.id} className={styles.listRow}>
-                  <div className={styles.listMain}>
-                    <span className={styles.listMainTop}>{v.country || "Unknown"}</span>
-                    <span className={styles.listMainSub}>
-                      {v.deviceType || "—"} · {v.browser || "—"} · {v.visitedPage || "/"}
-                    </span>
+              {recentVisitors.map((v) => {
+                const flag = flagFor(v.country);
+                const deviceParts = [v.deviceType, v.browser].filter(Boolean);
+                return (
+                  <div key={v.id} className={styles.listRow}>
+                    <div className={styles.listMain}>
+                      {v.country && (
+                        <span className={styles.listMainTop}>
+                          {flag && <span className={styles.flag}>{flag}</span>}
+                          {v.country}
+                        </span>
+                      )}
+                      {deviceParts.length > 0 && (
+                        <span className={styles.listMainSub}>
+                          <DeviceIcon type={v.deviceType} />
+                          {deviceParts.join(" · ")}
+                        </span>
+                      )}
+                    </div>
+                    <span className={styles.listSide}>{timeAgo(v.createdAt)}</span>
                   </div>
-                  <span className={styles.listSide}>{timeAgo(v.createdAt)}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

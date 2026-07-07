@@ -8,7 +8,7 @@ import DevOps from "../sections/DevOps";
 import AITools from "../sections/AITools";
 import AIWork from "../sections/AIWork";
 import { useSectionTracking } from "../hooks/useSectionTracking";
-import { getSessionId } from "../utils/analytics";
+import { getVisitorId } from "../utils/analytics";
 
 const SECTION_MAP = {
   home: "Hero",
@@ -23,7 +23,7 @@ const SECTION_MAP = {
 };
 
 export default function Home() {
-  const sessionId = useMemo(() => getSessionId(), []);
+  const sessionId = useMemo(() => getVisitorId(), []);
   useSectionTracking(SECTION_MAP, { sessionId });
 
   return (

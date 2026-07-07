@@ -123,6 +123,7 @@ code, pre {
 .section {
   padding: var(--section-padding-y) 0;
   position: relative;
+  scroll-margin-top: var(--navbar-height);
 }
 
 .section-title {

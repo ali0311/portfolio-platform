@@ -3,7 +3,7 @@ import { Download } from "lucide-react";
 import { profile } from "../constants/profile";
 import TechIcon from "../components/TechIcon";
 import { api } from "../utils/api";
-import { getSessionId, detectDevice, detectBrowser } from "../utils/analytics";
+import { getVisitorId, detectDevice, detectBrowser } from "../utils/analytics";
 import profilePic from "../assets/images/profile_pic.jpeg";
 import styles from "./Hero.module.css";
 
@@ -76,7 +76,7 @@ export default function Hero() {
               onClick={() => {
                 api
                   .post("/api/analytics/resume-download", {
-                    sessionId: getSessionId(),
+                    sessionId: getVisitorId(),
                     deviceType: detectDevice(),
                     browser: detectBrowser(),
                     sourcePage: window.location.pathname || "/",
