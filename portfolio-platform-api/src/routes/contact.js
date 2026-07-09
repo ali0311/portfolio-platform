@@ -15,7 +15,7 @@ const contactLimiter = rateLimit({
 });
 
 const contactSchema = z.object({
-  linkedinUrl: z.string().trim().max(300).optional(),
+  linkedinUrl: z.string().trim().min(1).max(300),
   message: z.string().trim().min(1).max(5000),
 });
 

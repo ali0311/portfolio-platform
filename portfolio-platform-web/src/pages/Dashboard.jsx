@@ -15,7 +15,7 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import { LogOut, Loader2, Smartphone, Monitor, Tablet } from "lucide-react";
+import { LogOut, Loader2, Smartphone, Monitor, Tablet, Trash2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../utils/api";
 import { flagFor } from "../utils/countryFlag";
@@ -82,6 +82,26 @@ export default function Dashboard() {
   const [recentVisitors, setRecentVisitors] = useState([]);
   const [messages, setMessages] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [armedMessageId, setArmedMessageId] = useState(null);
+
+  async function onDeleteMessage(id) {
+    if (armedMessageId !== id) {
+      setArmedMessageId(id);
+      setTimeout(() => {
+        setArmedMessageId((current) => (current === id ? null : current));
+      }, 3000);
+      return;
+    }
+    const prev = messages;
+    setMessages((list) => list.filter((m) => m.id !== id));
+    setArmedMessageId(null);
+    try {
+      await api.delete(`/api/dashboard/contact-messages/${id}`);
+    } catch (err) {
+      setMessages(prev);
+      setError(err?.message || "Failed to delete message");
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -404,17 +424,30 @@ export default function Dashboard() {
             {messages.length === 0 && (
               <div className={styles.emptyState}>No contact messages yet</div>
             )}
-            {messages.map((m) => (
-              <div key={m.id} className={styles.message}>
-                <div className={styles.messageHead}>
-                  <span className={styles.messageName}>
-                    {m.linkedinUrl || "Anonymous"}
-                  </span>
-                  <span className={styles.listSide}>{timeAgo(m.createdAt)}</span>
+            {messages.map((m) => {
+              const armed = armedMessageId === m.id;
+              return (
+                <div key={m.id} className={styles.message}>
+                  <div className={styles.messageHead}>
+                    <span className={styles.messageName}>
+                      {m.linkedinUrl || "Anonymous"}
+                    </span>
+                    <div className={styles.messageHeadRight}>
+                      <span className={styles.listSide}>{timeAgo(m.createdAt)}</span>
+                      <button
+                        type="button"
+                        className={armed ? styles.deleteBtnArmed : styles.deleteBtn}
+                        onClick={() => onDeleteMessage(m.id)}
+                        title={armed ? "Click again to confirm" : "Delete message"}
+                      >
+                        {armed ? "Sure?" : <Trash2 size={14} />}
+                      </button>
+                    </div>
+                  </div>
+                  <p className={styles.messageBody}>{m.message}</p>
                 </div>
-                <p className={styles.messageBody}>{m.message}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
