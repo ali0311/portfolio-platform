@@ -248,6 +248,43 @@
   line-height: 1.6;
 }
 
+.messageHeadRight {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.deleteBtn,
+.deleteBtnArmed {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.deleteBtn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.deleteBtnArmed {
+  color: #f87171;
+  border-color: #f87171;
+  font-weight: 600;
+  padding: 2px var(--space-2);
+}
+
+.deleteBtnArmed:hover {
+  background: rgba(248, 113, 113, 0.08);
+}
+
 @media (max-width: 1024px) {
   .kpis { grid-template-columns: repeat(2, 1fr); }
   .row { grid-template-columns: 1fr; }

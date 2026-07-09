@@ -159,4 +159,16 @@ router.get("/contact-messages", async (_req, res, next) => {
   }
 });
 
+router.delete("/contact-messages/:id", async (req, res, next) => {
+  try {
+    await prisma.contactMessage.delete({ where: { id: req.params.id } });
+    res.status(204).end();
+  } catch (err) {
+    if (err.code === "P2025") {
+      return res.status(404).json({ error: "Message not found" });
+    }
+    next(err);
+  }
+});
+
 export default router;

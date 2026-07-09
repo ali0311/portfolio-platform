@@ -19,7 +19,7 @@ export default function ContactForm() {
     setStatus("submitting");
     try {
       await api.post("/api/contact", {
-        linkedinUrl: values.linkedinUrl.trim() || undefined,
+        linkedinUrl: values.linkedinUrl.trim(),
         message: values.message.trim(),
       });
       setStatus("success");
@@ -51,11 +51,12 @@ export default function ContactForm() {
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.field}>
             <label htmlFor="cf-linkedin" className={styles.label}>
-              LinkedIn / Email
+              LinkedIn / Email *
             </label>
             <input
               id="cf-linkedin"
               type="text"
+              required
               maxLength={300}
               value={values.linkedinUrl}
               onChange={update("linkedinUrl")}
@@ -65,7 +66,7 @@ export default function ContactForm() {
 
           <div className={styles.field}>
             <label htmlFor="cf-message" className={styles.label}>
-              Message
+              Message *
             </label>
             <textarea
               id="cf-message"
