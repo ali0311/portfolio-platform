@@ -58,6 +58,9 @@ const tooltipStyle = {
   padding: "8px 12px",
 };
 
+const tooltipLabelStyle = { color: "#e5e7eb", fontWeight: 600 };
+const tooltipItemStyle = { color: "#e5e7eb" };
+
 const axisStyle = { fill: "#7a7a90", fontSize: 11 };
 
 function barChartHeight(rowCount) {
@@ -366,7 +369,11 @@ export default function Dashboard() {
                         width={110}
                         interval={0}
                       />
-                      <Tooltip contentStyle={tooltipStyle} />
+                      <Tooltip
+                        contentStyle={tooltipStyle}
+                        labelStyle={tooltipLabelStyle}
+                        itemStyle={tooltipItemStyle}
+                      />
                       <Bar dataKey="count" radius={[0, 6, 6, 0]}>
                         {countries.map((_, i) => (
                           <Cell key={i} fill={BAR_COLORS[i % BAR_COLORS.length]} />
